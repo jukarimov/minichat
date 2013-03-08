@@ -1,0 +1,46 @@
+<% if (!user) { %>
+	<h2>Welcome! Please log in.</h2>
+	<a href="/login">login</a>
+<% } else { %>
+	<h2>Hello, <%= user.username %>.</h2>
+	<script src="jquery.min.js"></script>
+	<script>
+/***********************************************/
+$(document).ready(function() {
+  $('#message').keyup(function(e){
+    if (e.keyCode == 13) {
+      if (this.value == '') return;
+      console.log('send: ' + this.value);
+      $.post('/send', { message: this.value });
+      this.value = '';
+    }
+  });
+});
+var pollInt_gmessg;
+var pollInt_gulist;
+function poll() {
+  pollInt_gmessg = setInterval('gmessg();', 1000); 
+  pollInt_gulist = setInterval('gulist();', 10000); 
+};
+poll();
+function gmessg() {
+  $.get('/messg', function(res) {
+    if (res.length)
+      $('#channel').append(res + '<br>');
+  });
+}
+function gulist() {
+  $('#usrlist').html('');
+  $.get('/ulist', function(res) {
+    for (var i = 0; i < res.length; i++)
+      $('#usrlist').append(res[i].toString() + '<br>');
+      $('#channel').append('<font size="1pt" >[' + Date().toString().split(' ')[4] + ']</font><br>');
+  });
+}
+/***********************************************/
+	</script>
+	<div id="usrlist" style="width:90px;height:100px;overflow:scroll;
+				 position:absolute;left:700px;"></div>
+	<div id="channel" style="width:600px;height:300px;background-color:lightblue;overflow:scroll;"></div>
+	<input type="text" id="message" style="bottom:5px;margin:10px;margin-left:15px" size="70" />
+<% } %>
