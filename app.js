@@ -1,3 +1,4 @@
+#!/usr/local/bin/node
 var flash = require('connect-flash')
   , express = require('express')
   , passport = require('passport')
@@ -107,7 +108,11 @@ app.post('/send', ensureAuthenticated, function(req, res){
   console.log(msg);
   for (var i = 0, len = users.length; i < len; i++) {
     var user = users[i];
-    user.inbox.push(msg);
+    if (user.online)
+      user.inbox.push(msg);
+    else {
+      user.inbox.push(msg + '<br><font size="1pt">(' + Date().toString() + ')</font>');
+    }
   }
   //messg.push(req.user.username + ': ' + req.body.message.toString());
   //fs.appendFile("int/chat.txt", JSON.stringify({req.user.username: req.body.message.toString()}) + ',');
