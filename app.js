@@ -3,16 +3,12 @@ var flash = require('connect-flash')
   , express = require('express')
   , passport = require('passport')
   , util = require('util')
-  , fs = require('fs')
   , LocalStrategy = require('passport-local').Strategy;
   
-
 var users = [
     { id: 1, username: 'bob', password: 'secret', email: 'bob@example.com', inbox: [], online: false }
   , { id: 2, username: 'joe', password: 'birthday', email: 'joe@example.com', inbox: [], online: false }
 ];
-
-var messg = [];
 
 function findById(id, fn) {
   var idx = id - 1;
@@ -33,7 +29,6 @@ function findByUsername(username, fn) {
   return fn(null, null);
 }
 
-
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
 //   serialize users into and deserialize users out of the session.  Typically,
@@ -48,7 +43,6 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-
 
 // Use the LocalStrategy within Passport.
 //   Strategies in passport require a `verify` function, which accept
@@ -73,7 +67,6 @@ passport.use(new LocalStrategy(
     });
   }
 ));
-
 
 var app = express();
 
@@ -114,8 +107,6 @@ app.post('/send', ensureAuthenticated, function(req, res){
       user.inbox.push(msg + '<br><font size="1pt">(' + Date().toString() + ')</font>');
     }
   }
-  //messg.push(req.user.username + ': ' + req.body.message.toString());
-  //fs.appendFile("int/chat.txt", JSON.stringify({req.user.username: req.body.message.toString()}) + ',');
 });
 
 app.get('/messg', ensureAuthenticated, function(req, res){
@@ -180,7 +171,6 @@ app.get('/logout', function(req, res){
 });
 
 app.listen(3000);
-
 
 // Simple route middleware to ensure user is authenticated.
 //   Use this route middleware on any resource that needs to be protected.  If
